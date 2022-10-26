@@ -1,0 +1,50 @@
+
+@media screen and (min-width: 426px) {
+  
+/* Header start */
+  .burger {
+    display: none;
+  }
+
+  .start-game {
+    display: block;
+    margin: 0 auto;
+  }
+
+  .start-game form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .start-game label {
+    margin-right: 0.25rem;
+  }
+
+/* Header end */
+
+/* Play area */
+
+/* Player area */
+
+}
+
+@media screen and (min-width: 769px){
+
+  body {
+    max-width: 1000px;
+  }
+
+  main {
+    margin: 0 auto;
+  }
+
+/* Header start */
+
+/* Header end */
+
+/* Play area */
+
+/* Player area */
+
+}
