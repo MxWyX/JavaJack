@@ -36,12 +36,16 @@ document.querySelector("#restart").addEventListener("click", () => {
 document.querySelector("#play").addEventListener("click", __init__);
 
 // Twist
-document.querySelector("#twist").addEventListener("click", twist("player"));
+document.querySelector("#twist").addEventListener("click", (event) => {
+  twist(event, "player");
+});
 
 // allow the player to start the game but placing a bet on their cards, then reveal the gameplay button options
-document.querySelector("#start").addEventListener("click", () => {
+document.querySelector("#start").addEventListener("click", (player) => {
   event.preventDefault();
-  player.bet;
+  player.bet = document.querySelector("#bet").value;
+  document.querySelector("#bet").textContent =
+    document.querySelector("#bet-start").value;
   document.querySelector(".twist-stick").classList.toggle("hide");
   document.querySelector(".start-bet").classList.toggle("hide");
 });

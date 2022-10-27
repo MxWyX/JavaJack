@@ -125,7 +125,7 @@ const startGame = () => {
   game.reveal("dealer", game.deal());
 };
 
-const twist = (player) => {
+const twist = (event, player) => {
   event.preventDefault();
   game.reveal(player, game.deal());
   // Run deal function that will gen card and check if dealt already
