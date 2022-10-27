@@ -14,12 +14,6 @@ body {
   background-color: #0c4b1c;
 }
 
-img {
-  width: 20%;
-  height: 30%;
-  margin: 0.5rem;
-  margin-right: -5rem;
-}
 
 /* Header start */
 
@@ -79,6 +73,13 @@ img {
   align-items: center;
   justify-content: center;
   margin: 3rem 0;
+}
+
+.hand img {
+  width: 20%;
+  height: 30%;
+  margin: 0.5rem;
+  margin-right: -5rem;
 }
 
 /* Console */
