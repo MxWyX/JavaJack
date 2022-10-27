@@ -14,14 +14,14 @@ document.querySelector(".start-game").addEventListener("mouseleave", () => {
 // Mobile start menu end
 
 // Close menu on play
-document.querySelector("#play").addEventListener("click", () => {
+document.querySelector("#play").addEventListener("click", (event) => {
   event.preventDefault();
   document.querySelector(".start-game").style.display = "none";
   document.querySelector(".restart-game").style.display = "block";
   document.querySelector(".start-bet").classList.toggle("hide");
 });
 
-document.querySelector("#restart").addEventListener("click", () => {
+document.querySelector("#restart").addEventListener("click", (event) => {
   event.preventDefault();
   document.querySelector(".start-game").style.display = "block";
   document.querySelector(".restart-game").style.display = "none";
@@ -33,22 +33,37 @@ document.querySelector("#restart").addEventListener("click", () => {
 // Player area start
 
 // Start game
-document.querySelector("#play").addEventListener("click", __init__);
+document.querySelector("#play").addEventListener("click", (event) => {
+  event.preventDefault();
+  __init__();
+});
 
 // Twist
 document.querySelector("#twist").addEventListener("click", (event) => {
-  twist(event, "player");
+  event.preventDefault();
+  twist(player);
+});
+
+// Stick
+document.querySelector('#stick').addEventListener('click', (event) => {
+  event.preventDefault();
+  stick(event,player,dealer);
 });
 
 // allow the player to start the game but placing a bet on their cards, then reveal the gameplay button options
-document.querySelector("#start").addEventListener("click", (player) => {
+document.querySelector("#start").addEventListener("click", (event,player) => {
   event.preventDefault();
-  player.bet = document.querySelector("#bet").value;
+  console.log( document.querySelector("#bet-start").value);
+  player.bet(document.querySelector("#bet-start").value);
   document.querySelector("#bet").textContent =
     document.querySelector("#bet-start").value;
+  begin();
+});
+
+const begin = () => {
   document.querySelector(".twist-stick").classList.toggle("hide");
   document.querySelector(".start-bet").classList.toggle("hide");
-});
+}
 
 // dynamically update the "console" to show winnings, losings, bet amounts
 
@@ -58,6 +73,20 @@ document.querySelector("#start").addEventListener("click", (player) => {
 
 // Dealer area start
 
+// This is obsolete now that the everything is through object methods
 // flip one card, then flip them all on bust or stick
 
 // Dealer area end
+
+const restartGame = () => {
+  for (let i = 1;i < player.hand.length;++i) {
+    document.querySelector('#player-hand').removeChild();
+  }
+  for (let i = 1;i < dealer.hand.length;++i) {
+    document.querySelector('#dealer-hand').removeChild();
+  }
+  player.resetHand();
+  dealer.resetHand();
+  game.dealt = [[],[],[],[]];
+  begin();
+}

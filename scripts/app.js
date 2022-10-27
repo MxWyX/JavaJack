@@ -18,8 +18,6 @@ const game = {
       card.push(Math.floor(Math.random() * 13 + 1));
       if (this.dealt[card[0]].includes(card[1]) === false) {
         // pass the deal card back out to be processed.
-        console.log(card);
-        console.log(this.dealt);
         this.dealt[card[0]].push(card[1]);
         return card;
       } else {
@@ -32,72 +30,20 @@ const game = {
     let showCard = document.createElement("img");
     showCard.src = `./assets/img/${card[0]}/${card[1]}.png`;
     document.querySelector(`#${player}-hand`).appendChild(showCard);
-    // player.dealHand(card[1]);
     // add the card to the hand element of the player object to track the game.
   },
   gameOver(pVal, dVal) {
     if (dVal > pVal) {
-      // dealer wins
+      document.querySelector('#console').textContent = 'Dealer wins.';
     } else {
-      // player wins
+      document.querySelector('#console').textContent = `${player.name} wins.`;
     }
+    restartGame();
   },
 };
 
-class Player {
-  constructor(name, balance) {
-    this._name = name;
-    this._balance = balance;
-    this._bet = 0;
-    this._hand = [];
-  }
-
-  get name() {
-    return this._name;
-  }
-
-  get balance() {
-    return this._balance;
-  }
-
-  get bet() {
-    return this._bet;
-  }
-
-  get hand() {
-    return this._hand;
-  }
-
-  set bet(amount) {
-    this._bet = amount;
-  }
-
-  dealHand(card) {
-    this._hand.push(card);
-  }
-
-  value() {
-    return hand.map((card) => {
-      if (card > 10) {
-        return 10;
-      } else {
-        return card;
-      }
-    });
-  }
-
-  bust() {
-    if (player.value().reduce((partialSum, a) => partialSum + a, 0) > 21) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-}
-
 function __init__() {
-  event.preventDefault();
-  const dealer = new Player("dealer", 9999999);
+  const dealer = new Dealer;
   const player = createPlayer();
   document.querySelector("#balance").textContent =
     document.querySelector("#starting-bal").value;
@@ -105,7 +51,7 @@ function __init__() {
   // storeData(player);
   console.log(player);
   console.log(dealer);
-  startGame();
+  startGame(player,dealer);
 }
 
 const storeData = (player) => {
@@ -116,29 +62,48 @@ const storeData = (player) => {
 const createPlayer = () => {
   let bal = document.querySelector("#starting-bal").value;
   let name = document.querySelector("#player-name").value;
-  return new Player(name, bal);
+  return new Human(name, bal);
 };
 
-const startGame = () => {
-  game.reveal("player", game.deal());
-  game.reveal("player", game.deal());
-  game.reveal("dealer", game.deal());
+const startGame = (player,dealer) => {
+  let card = game.deal();
+  game.reveal("player", card);
+  player.dealHand(card);
+  card = game.deal();
+  game.reveal("player", card);
+  player.dealHand(card);
+  card = game.deal();
+  game.reveal("dealer", card);
+  dealer.dealHand(card);
 };
 
-const twist = (event, player) => {
-  event.preventDefault();
-  game.reveal(player, game.deal());
+const twist = (player) => {
+  let card = game.deal();
+  game.reveal('player', card);
+  player.dealHand(card);
+  if (player.bust()) {
+    player.balance(false);
+    // restart function
+  }
   // Run deal function that will gen card and check if dealt already
   // Add card to players hand list
   // reveal card to player
   // check if player is bust or not
-  if (player.bust()) {
-    // player loses the game, start dealer turn.
-  }
-  // if not lost then allow another twist or stick.
 };
 
-const stick = () => {
+const bustCheck = () => {
+  if (player.bust()) {
+    return true
+  }
+  // if not lost then allow another twist or stick.
+}
+
+const stick = (player,dealer) => {
+  let card = game.deal();
+  game.reveal('dealer',card);
+  dealer.dealHand(card);
+  dealer.dealerTurn();
+  game.gameOver(player.value(),dealer.value());
   // this should just trigger the dealer to start to take cards.
   // a separate function for dealer or try to reuse player? nnot sure how to dynamically target different objects as the player and dealer?
 };
