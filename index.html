@@ -13,8 +13,8 @@
   <!-- Header controls start -->
   <header>
     <section class='game-controls'>
-      <section class='burger'>
-        <i class="fa-solid fa-bars"></i>
+      <section class='restart-game' style='display: none'>
+        <i id='restart' class="fa-solid fa-rotate-right"></i>
       </section>
       <section class='start-game'>
         <form>
@@ -28,9 +28,6 @@
           </div>
           <button id='play'>Play!</button>
         </form>
-      </section>
-      <section class='restart-game' style='display: none'>
-        <i id='restart' class="fa-solid fa-rotate-right"></i>
       </section>
     </section>
     <!-- controls for the game, restart, bet controls? -->
@@ -49,7 +46,7 @@
     <section class='player-side'>
       <section id='player-hand' class='hand'>
       </section>
-      <section class='console'>
+      <section class='console hide'>
         <div>
           <p>Balance:</p>
           <p id='balance'></p>

@@ -25,6 +25,10 @@
 
 /* Play area */
 
+  .hand img {
+    margin-right: -2rem;
+  }
+
 /* Player area */
 
 }
@@ -44,7 +48,9 @@
 /* Header end */
 
 /* Play area */
-
+.hand img {
+  margin: 1rem;
+}
 /* Player area */
 
 }

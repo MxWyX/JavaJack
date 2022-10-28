@@ -22,12 +22,6 @@ body {
   /* margin: 0 auto; */
 }
 
-.burger {
-  float: right;
-  font-size: 2rem;
-  margin: 0.5rem;
-}
-
 .start-game form {
   display: flex;
   flex-direction: column;
@@ -63,6 +57,12 @@ body {
   margin: 1rem;
 }
 
+#restart {
+  position: relative;
+  top: -10;
+  right: 0;
+}
+
 /* Header end */
 
 /* Play area start */
@@ -79,7 +79,7 @@ body {
   width: 20%;
   height: 30%;
   margin: 0.5rem;
-  margin-right: -5rem;
+  margin-right: -3rem;
 }
 
 /* Console */

@@ -2,15 +2,6 @@
 
 // Mobile start menu start
 // on click of burger menu, open start play menu
-document.querySelector(".burger").addEventListener("click", () => {
-  document.querySelector(".burger").classList.toggle("hide");
-  document.querySelector(".start-game").classList.toggle("hide");
-});
-
-document.querySelector(".start-game").addEventListener("mouseleave", () => {
-  document.querySelector(".burger").classList.toggle("hide");
-  document.querySelector(".start-game").classList.toggle("hide");
-});
 // Mobile start menu end
 
 // Close menu on play
@@ -19,14 +10,26 @@ document.querySelector("#play").addEventListener("click", (event) => {
   document.querySelector(".start-game").style.display = "none";
   document.querySelector(".restart-game").style.display = "block";
   document.querySelector(".start-bet").classList.toggle("hide");
+  document.querySelector(".console").classList.toggle("hide");
 });
 
-document.querySelector("#restart").addEventListener("click", (event) => {
-  event.preventDefault();
-  document.querySelector(".start-game").style.display = "block";
-  document.querySelector(".restart-game").style.display = "none";
-  // And delete player name, bal
-});
+document
+  .querySelector("#restart")
+  .addEventListener("click", (event, player, dealer) => {
+    event.preventDefault();
+    for (let i = 1; i < player.hand.length; ++i) {
+      document.querySelector("#player-hand").removeChild();
+    }
+    for (let i = 1; i < dealer.hand.length; ++i) {
+      document.querySelector("#dealer-hand").removeChild();
+    }
+    player.resetHand();
+    dealer.resetHand();
+    game.dealt = [[], [], [], []];
+    document.querySelector(".start-game").style.display = "block";
+    document.querySelector(".restart-game").style.display = "none";
+    // And delete player name, bal
+  });
 
 // Header end
 
@@ -45,25 +48,28 @@ document.querySelector("#twist").addEventListener("click", (event) => {
 });
 
 // Stick
-document.querySelector('#stick').addEventListener('click', (event) => {
+document.querySelector("#stick").addEventListener("click", (event) => {
   event.preventDefault();
-  stick(event,player,dealer);
+  stick(event, player, dealer);
 });
 
 // allow the player to start the game but placing a bet on their cards, then reveal the gameplay button options
-document.querySelector("#start").addEventListener("click", (event,player) => {
+document.querySelector("#start").addEventListener("click", (event, player) => {
   event.preventDefault();
-  console.log( document.querySelector("#bet-start").value);
-  player.bet(document.querySelector("#bet-start").value);
-  document.querySelector("#bet").textContent =
-    document.querySelector("#bet-start").value;
-  begin();
+  let bet = document.querySelector("#bet-start").value;
+  if (bet <= player.balance) {
+    document.querySelector("#bet").textContent = bet;
+    begin();
+  } else {
+    document.querySelector("#winner").textContent = "bet too high";
+    document.querySelector("#bet-start").textContent = "";
+  }
 });
 
 const begin = () => {
   document.querySelector(".twist-stick").classList.toggle("hide");
   document.querySelector(".start-bet").classList.toggle("hide");
-}
+};
 
 // dynamically update the "console" to show winnings, losings, bet amounts
 
@@ -77,16 +83,3 @@ const begin = () => {
 // flip one card, then flip them all on bust or stick
 
 // Dealer area end
-
-const restartGame = () => {
-  for (let i = 1;i < player.hand.length;++i) {
-    document.querySelector('#player-hand').removeChild();
-  }
-  for (let i = 1;i < dealer.hand.length;++i) {
-    document.querySelector('#dealer-hand').removeChild();
-  }
-  player.resetHand();
-  dealer.resetHand();
-  game.dealt = [[],[],[],[]];
-  begin();
-}

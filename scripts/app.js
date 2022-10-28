@@ -34,24 +34,24 @@ const game = {
   },
   gameOver(pVal, dVal) {
     if (dVal > pVal) {
-      document.querySelector('#console').textContent = 'Dealer wins.';
+      document.querySelector("#console").textContent = "Dealer wins.";
     } else {
-      document.querySelector('#console').textContent = `${player.name} wins.`;
+      document.querySelector("#console").textContent = `${player.name} wins.`;
     }
     restartGame();
   },
 };
 
 function __init__() {
-  const dealer = new Dealer;
+  const dealer = new Dealer();
   const player = createPlayer();
   document.querySelector("#balance").textContent =
     document.querySelector("#starting-bal").value;
-  // storeData(dealer);
-  // storeData(player);
+  storeData(dealer);
+  storeData(player);
   console.log(player);
   console.log(dealer);
-  startGame(player,dealer);
+  startGame(player, dealer);
 }
 
 const storeData = (player) => {
@@ -65,7 +65,7 @@ const createPlayer = () => {
   return new Human(name, bal);
 };
 
-const startGame = (player,dealer) => {
+const startGame = (player, dealer) => {
   let card = game.deal();
   game.reveal("player", card);
   player.dealHand(card);
@@ -79,7 +79,7 @@ const startGame = (player,dealer) => {
 
 const twist = (player) => {
   let card = game.deal();
-  game.reveal('player', card);
+  game.reveal("player", card);
   player.dealHand(card);
   if (player.bust()) {
     player.balance(false);
@@ -93,17 +93,30 @@ const twist = (player) => {
 
 const bustCheck = () => {
   if (player.bust()) {
-    return true
+    return true;
   }
   // if not lost then allow another twist or stick.
-}
+};
 
-const stick = (player,dealer) => {
+const stick = (player, dealer) => {
   let card = game.deal();
-  game.reveal('dealer',card);
+  game.reveal("dealer", card);
   dealer.dealHand(card);
   dealer.dealerTurn();
-  game.gameOver(player.value(),dealer.value());
+  game.gameOver(player.value(), dealer.value());
   // this should just trigger the dealer to start to take cards.
   // a separate function for dealer or try to reuse player? nnot sure how to dynamically target different objects as the player and dealer?
+};
+
+const restartGame = () => {
+  for (let i = 1; i < player.hand.length; ++i) {
+    document.querySelector("#player-hand").removeChild();
+  }
+  for (let i = 1; i < dealer.hand.length; ++i) {
+    document.querySelector("#dealer-hand").removeChild();
+  }
+  player.resetHand();
+  dealer.resetHand();
+  game.dealt = [[], [], [], []];
+  begin();
 };

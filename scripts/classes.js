@@ -1,4 +1,3 @@
-
 class Player {
   constructor() {
     this._hand = [];
@@ -28,7 +27,7 @@ class Player {
   }
 
   bust() {
-    if (this.value() > 21 ) {
+    if (this.value() > 21) {
       return true;
     } else {
       return false;
@@ -37,7 +36,7 @@ class Player {
 }
 
 class Human extends Player {
-  constructor(name,balance) {
+  constructor(name, balance) {
     super();
     this._name = name;
     this._balance = balance;
@@ -55,7 +54,7 @@ class Human extends Player {
   get bet() {
     return this._bet;
   }
-// having issues with this bet for some reason
+  // having issues with this bet for some reason
   set bet(amount) {
     this._bet = amount;
   }
@@ -65,7 +64,7 @@ class Human extends Player {
       this._balance + this.bet;
     } else {
       this._balance - this.bet;
-      this
+      this;
     }
     this.bet(0);
   }
@@ -83,7 +82,7 @@ class Dealer extends Player {
   }
 
   get stick() {
-  return this._stick;
+    return this._stick;
   }
 
   stick() {
@@ -92,14 +91,13 @@ class Dealer extends Player {
 
   dealerTurn() {
     while (!this.stick) {
-      if (this.value() >= 18 ){
+      if (this.value() >= 18) {
         this.stick;
       } else {
         let card = game.deal();
-        game.reveal('dealer',card);
+        game.reveal("dealer", card);
         this.dealHand(card);
         if (this.bust()) {
-
         }
       }
     }
@@ -129,5 +127,3 @@ class Dealer extends Player {
 //   third() {
 
 //   }
-
-
