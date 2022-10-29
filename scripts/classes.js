@@ -73,13 +73,13 @@ class Human extends Player {
 class Dealer extends Player {
   constructor(hand) {
     super(hand);
-    this._handSize = this._hand.length;
+    // this._handSize = this._hand.length;
     this._stick = false;
   }
 
-  get handSize() {
-    return this._handSize;
-  }
+  // get handSize() {
+  //   return this._handSize;
+  // }
 
   get stick() {
     return this._stick;

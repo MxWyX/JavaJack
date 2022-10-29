@@ -56,9 +56,8 @@ document.querySelector("#stick").addEventListener("click", (event) => {
 // allow the player to start the game but placing a bet on their cards, then reveal the gameplay button options
 document.querySelector("#start").addEventListener("click", (event) => {
   event.preventDefault();
-  let bet = document.querySelector("#bet-start").value;
-  if (bet <= document.querySelector('#balance').textContent) {
-    document.querySelector("#bet").textContent = bet;
+  if (document.querySelector("#bet-start").value <= document.querySelector('#balance').textContent) {
+    document.querySelector("#bet").textContent = document.querySelector("#bet-start").value;
     begin();
   } else {
     document.querySelector("#winner").textContent = "bet too high";
