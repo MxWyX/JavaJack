@@ -42,7 +42,7 @@ document.querySelector("#play").addEventListener("click", (event) => {
 });
 
 // Twist
-document.querySelector("#twist").addEventListener("click", (event) => {
+document.querySelector("#twist").addEventListener("click", (event, player) => {
   event.preventDefault();
   twist(player);
 });
@@ -56,12 +56,17 @@ document.querySelector("#stick").addEventListener("click", (event) => {
 // allow the player to start the game but placing a bet on their cards, then reveal the gameplay button options
 document.querySelector("#start").addEventListener("click", (event) => {
   event.preventDefault();
-  if (document.querySelector("#bet-start").value <= document.querySelector('#balance').textContent) {
-    document.querySelector("#bet").textContent = document.querySelector("#bet-start").value;
+  document.querySelector("#bet").textContent = "";
+  if (
+    document.querySelector("#bet-start").value <=
+    document.querySelector("#balance").textContent
+  ) {
+    document.querySelector("#bet").textContent =
+      document.querySelector("#bet-start").value;
     begin();
   } else {
     document.querySelector("#winner").textContent = "bet too high";
-    document.querySelector("#bet-start").textContent = "";
+    document.querySelector("#bet-start").value = "";
   }
 });
 

@@ -59,6 +59,12 @@ const storeData = (player) => {
   sessionStorage.setItem(player.name, playerStore);
 };
 
+const getData = (player) => {
+  let playerGet = sessionStorage.getItem(player);
+  playerGet = JSON.parse(playerGet);
+  return playerGet;
+};
+
 const createPlayer = () => {
   let bal = document.querySelector("#starting-bal").value;
   let name = document.querySelector("#player-name").value;
