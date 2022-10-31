@@ -1,4 +1,5 @@
-// classes code
+// Player and dealer classes
+
 class Player {
   constructor() {
     this._hand = [];
@@ -9,7 +10,7 @@ class Player {
   }
 
   resetHand() {
-    this._hand;
+    this._hand = [];
   }
 
   dealHand(card) {
@@ -17,22 +18,14 @@ class Player {
   }
 
   value() {
-    let cardVal = hand.map((card) => {
+    let cardVal = this.hand.map((card) => {
       if (card > 10) {
         return 10;
       } else {
         return card;
       }
     });
-    return cardVal.reduce((partialSum, a) => partialSum + a, 0) > 21;
-  }
-
-  bust() {
-    if (this.value() > 21) {
-      return true;
-    } else {
-      return false;
-    }
+    return cardVal.reduce((partialSum, a) => partialSum + a, 0);
   }
 }
 
@@ -56,18 +49,18 @@ class Human extends Player {
     return this._bet;
   }
   // having issues with this bet for some reason
-  set bet(amount) {
+  bet(amount) {
     this._bet = amount;
   }
 
-  set balance(win) {
+  balanceChange(win) {
     if (win) {
-      this._balance + this.bet;
+      this._balance = +this.bet;
     } else {
-      this._balance - this.bet;
-      this;
+      this._balance = -this.bet;
     }
-    this.bet(0);
+    console.log(this._balance);
+    document.querySelector("#balance").textContent = this.balance;
   }
 }
 
@@ -91,24 +84,24 @@ class Dealer extends Player {
   }
 
   dealerTurn() {
-    while (!this.stick) {
-      if (this.value() >= 18) {
-        this.stick;
-      } else {
-        let card = game.deal();
-        game.reveal("dealer", card);
-        this.dealHand(card);
-        if (this.bust()) {
-        }
+    let card = game.deal();
+    game.reveal("dealer", card);
+    this.dealHand(card);
+    while (this.value() <= 18) {
+      let card = game.deal();
+      game.reveal("dealer", card);
+      this.dealHand(card);
+      if (this.value() > 21) {
+        game.gameOver(1, 0);
       }
     }
+    this.stick;
   }
 }
-``;
 
-/////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// App code
+// Game logic
 
 const game = {
   // the cards list is ultimately uneccassary and proves that I could have done a random gen between 1/52 to get cards... Idiot. On second thought maybe not tbh, think new multi list way is best.
@@ -141,64 +134,84 @@ const game = {
     // add the card to the hand element of the player object to track the game.
   },
   gameOver(pVal, dVal) {
-    if (dVal > pVal) {
-      document.querySelector("#console").textContent = "Dealer wins.";
+    document.querySelector("#bet").textContent = "";
+    if (dVal > pVal || dVal == pVal) {
+      document.querySelector("#winner").textContent = "Dealer wins.";
+      this.player.balanceChange(false);
     } else {
-      document.querySelector("#console").textContent = `${player.name} wins.`;
+      document.querySelector(
+        "#winner"
+      ).textContent = `${this.player.name} wins.`;
+      this.player.balanceChange(true);
     }
-    restartGame();
+    if (this.player.balance < 0) {
+      this.restartGame();
+      this.startGame(this.player, this.dealer);
+    } else {
+      document.querySelector("#winner").textContent = "Game Over.";
+    }
   },
+  dealer: new Dealer(),
+  player: {},
   __init__() {
-    const dealer = new Dealer();
-    const player = createPlayer();
+    this.player = new Human(
+      document.querySelector("#player-name").value,
+      document.querySelector("#starting-bal").value
+    );
     document.querySelector("#balance").textContent =
       document.querySelector("#starting-bal").value;
-    startGame(player, dealer);
-  },
-  createPlayer() {
-    let bal = document.querySelector("#starting-bal").value;
-    let name = document.querySelector("#player-name").value;
-    return new Human(name, bal);
+    this.startGame(this.player, this.dealer);
   },
   startGame(player, dealer) {
-    let card = game.deal();
-    game.reveal("player", card);
+    let card = this.deal();
+    this.reveal("player", card);
     player.dealHand(card);
-    card = game.deal();
-    game.reveal("player", card);
+    card = this.deal();
+    this.reveal("player", card);
     player.dealHand(card);
-    card = game.deal();
-    game.reveal("dealer", card);
+    card = this.deal();
+    this.reveal("dealer", card);
     dealer.dealHand(card);
   },
-  twist(player) {
+  twist() {
+    console.log(this.player);
     let card = game.deal();
     game.reveal("player", card);
-    player.dealHand(card);
-    if (player.bust()) {
-      player.balance(false);
-      // restart function
+    this.player.dealHand(card);
+    console.log(this.player.value());
+    if (this.player.value() > 21) {
+      this.gameOver(0, 1);
     }
   },
-  stick(player, dealer) {
-    let card = game.deal();
-    game.reveal("dealer", card);
-    dealer.dealHand(card);
-    dealer.dealerTurn();
-    game.gameOver(player.value(), dealer.value());
+  stick() {
+    let card = this.deal();
+    this.reveal("dealer", card);
+    this.dealer.dealHand(card);
+    this.dealer.dealerTurn();
+    this.gameOver(this.player.value(), this.dealer.value());
   },
   restartGame() {
-    for (let i = 1; i < player.hand.length; ++i) {
-      document.querySelector("#player-hand").removeChild();
+    document.querySelector("#bet").textContent = "";
+    let hand = document.querySelector("#dealer-hand");
+    while (hand.firstChild) {
+      hand.removeChild(hand.firstChild);
     }
-    for (let i = 1; i < dealer.hand.length; ++i) {
-      document.querySelector("#dealer-hand").removeChild();
+    hand = document.querySelector("#player-hand");
+    while (hand.firstChild) {
+      hand.removeChild(hand.firstChild);
     }
-    player.resetHand();
-    dealer.resetHand();
-    game.dealt = [[], [], [], []];
-    begin();
-  };
+    this.player.resetHand();
+    this.player.bet("");
+    this.dealer.resetHand();
+    this.dealt = [[], [], [], []];
+    // document.querySelector(".start-game").style.display = "block";
+    // document.querySelector(".restart-game").style.display = "none";
+    this.begin();
+  },
+  begin() {
+    this.player.bet(document.querySelector("#bet-start").value);
+    document.querySelector("#bet-start").value = "";
+  },
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,36 +220,38 @@ const game = {
 
 // Header start
 
-// Mobile start menu start
-// on click of burger menu, open start play menu
-// Mobile start menu end
-
 // Close menu on play
 document.querySelector("#play").addEventListener("click", (event) => {
   event.preventDefault();
   document.querySelector(".start-game").style.display = "none";
   document.querySelector(".restart-game").style.display = "block";
-  document.querySelector(".start-bet").classList.toggle("hide");
-  document.querySelector(".console").classList.toggle("hide");
+  document.querySelector(".start-bet").style.display = "block";
+  document.querySelector(".console").style.display = "block";
+  document.querySelector("#player-name").value = "";
+  document.querySelector("#starting-bal").value = "";
 });
 
-document
-  .querySelector("#restart")
-  .addEventListener("click", (event, player, dealer) => {
-    event.preventDefault();
-    for (let i = 1; i < player.hand.length; ++i) {
-      document.querySelector("#player-hand").removeChild();
-    }
-    for (let i = 1; i < dealer.hand.length; ++i) {
-      document.querySelector("#dealer-hand").removeChild();
-    }
-    player.resetHand();
-    dealer.resetHand();
-    game.dealt = [[], [], [], []];
-    document.querySelector(".start-game").style.display = "block";
-    document.querySelector(".restart-game").style.display = "none";
-    // And delete player name, bal
-  });
+document.querySelector("#restart").addEventListener("click", (event) => {
+  event.preventDefault();
+  document.querySelector(".start-game").style.display = "block";
+  document.querySelector(".restart-game").style.display = "none";
+  document.querySelector(".start-bet").style.display = "none";
+  document.querySelector(".twist-stick").style.display = "none";
+  document.querySelector(".console").style.display = "none";
+  game.restartGame(event);
+  // for (let i = 1; i < game.player.hand.length; ++i) {
+  //   document.querySelector("#player-hand").removeChild();
+  // }
+  // for (let i = 1; i < game.dealer.hand.length; ++i) {
+  //   document.querySelector("#dealer-hand").removeChild();
+  // }
+  // player.resetHand();
+  // dealer.resetHand();
+  // game.dealt = [[], [], [], []];
+  // document.querySelector(".start-game").style.display = "block";
+  // document.querySelector(".restart-game").style.display = "none";
+  // // And delete player name, bal
+});
 
 // Header end
 
@@ -245,19 +260,20 @@ document
 // Start game
 document.querySelector("#play").addEventListener("click", (event) => {
   event.preventDefault();
-  __init__();
+  game.__init__();
 });
 
 // Twist
 document.querySelector("#twist").addEventListener("click", (event, player) => {
   event.preventDefault();
-  twist(player);
+  console.log(player);
+  game.twist(player);
 });
 
 // Stick
 document.querySelector("#stick").addEventListener("click", (event) => {
   event.preventDefault();
-  stick(event, player, dealer);
+  game.stick(event);
 });
 
 // allow the player to start the game but placing a bet on their cards, then reveal the gameplay button options
@@ -265,32 +281,17 @@ document.querySelector("#start").addEventListener("click", (event) => {
   event.preventDefault();
   document.querySelector("#bet").textContent = "";
   if (
-    document.querySelector("#bet-start").value <=
-    document.querySelector("#balance").textContent
+    document.querySelector("#bet-start").value >
+      document.querySelector("#balance").textContent ||
+    document.querySelector("#bet-start").value === ""
   ) {
+    document.querySelector("#winner").textContent = "Can't bet that";
+    document.querySelector("#bet-start").value = "";
+  } else {
     document.querySelector("#bet").textContent =
       document.querySelector("#bet-start").value;
-    begin();
-  } else {
-    document.querySelector("#winner").textContent = "bet too high";
-    document.querySelector("#bet-start").value = "";
+    document.querySelector(".start-bet").style.display = "none";
+    document.querySelector(".twist-stick").style.display = "block";
+    game.begin();
   }
 });
-
-const begin = () => {
-  document.querySelector(".twist-stick").classList.toggle("hide");
-  document.querySelector(".start-bet").classList.toggle("hide");
-};
-
-// dynamically update the "console" to show winnings, losings, bet amounts
-
-// Reveal the cards? though this is set up in the app file as part of a function already
-
-// Player area end
-
-// Dealer area start
-
-// This is obsolete now that the everything is through object methods
-// flip one card, then flip them all on bust or stick
-
-// Dealer area end

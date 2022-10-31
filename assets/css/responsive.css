@@ -39,6 +39,7 @@
     max-width: 1000px;
   }
 
+  header,
   main {
     margin: 0 auto;
   }

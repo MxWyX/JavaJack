@@ -38,15 +38,16 @@
     <!-- Dealer start -->
     <section class='dealer-side'>
       <section id='dealer-hand' class='hand'>
-
+        <!-- As cards are dealt they end up here as children -->
       </section>
     </section>
     <!-- Dealer end -->
     <!-- Player start -->
     <section class='player-side'>
       <section id='player-hand' class='hand'>
+        <!-- As cards are dealt they end up here as children -->
       </section>
-      <section class='console hide'>
+      <section class='console' style='display: none;'>
         <div>
           <p>Balance:</p>
           <p id='balance'></p>
@@ -67,7 +68,7 @@
             <input id='bet-start' type="number">
             <button id='start'>Start</button>
           </div>
-          <div class='twist-stick hide'>
+          <div class='twist-stick' style='display: none;'>
             <button id='twist'>Twist</button>
             <button id='stick'>Stick</button>
           </div>
