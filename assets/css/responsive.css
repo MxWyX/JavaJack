@@ -14,7 +14,7 @@
   .start-game form {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
   }
 
   .start-game label {
@@ -35,9 +35,9 @@
 
 @media screen and (min-width: 769px){
 
-  body {
-    max-width: 1000px;
-  }
+main {
+  max-width: 1000px;
+}
 
   header,
   main {

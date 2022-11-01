@@ -17,20 +17,30 @@ body {
 
 /* Header start */
 
+header {
+  width: 100%;
+}
+
 .game-controls {
   background-color: rgba(50, 50, 50, 0.4);
-  /* margin: 0 auto; */
+  padding: 0 auto;
+  display: flex;
+  justify-content: center;
 }
 
 .start-game form {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
   padding: 1rem;
   margin: 0;
 }
 
 .start-game div {
+  margin: 0.25rem;
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
 

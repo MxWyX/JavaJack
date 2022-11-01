@@ -50,17 +50,17 @@ class Human extends Player {
   }
   // having issues with this bet for some reason
   bet(amount) {
-    this._bet = amount;
+    this._bet = Number(amount);
   }
 
   balanceChange(win) {
+    // console.log(this.player.balance);
     if (win) {
-      this._balance = +this.bet;
+      Number(this._balance) = + Number(this.bet);
     } else {
-      this._balance = -this.bet;
+      Number(this._balance) = - Number(this.bet);
     }
-    console.log(this._balance);
-    document.querySelector("#balance").textContent = this.balance;
+    document.querySelector("#balance").textContent = Number(this.balance);
   }
 }
 
@@ -138,28 +138,30 @@ const game = {
     if (dVal > pVal || dVal == pVal) {
       document.querySelector("#winner").textContent = "Dealer wins.";
       this.player.balanceChange(false);
+      document.querySelector(".twist-stick").style.display = "none";
     } else {
       document.querySelector(
         "#winner"
       ).textContent = `${this.player.name} wins.`;
       this.player.balanceChange(true);
+      document.querySelector(".twist-stick").style.display = "none";
     }
-    if (this.player.balance < 0) {
+    if (Number(this.player.balance) > 0) {
       this.restartGame();
       this.startGame(this.player, this.dealer);
     } else {
       document.querySelector("#winner").textContent = "Game Over.";
+      document.querySelector(".twist-stick").style.display = "none";
     }
+    document.querySelector('#winner').textContent = '';
   },
   dealer: new Dealer(),
   player: {},
   __init__() {
     this.player = new Human(
       document.querySelector("#player-name").value,
-      document.querySelector("#starting-bal").value
+      Number(document.querySelector("#starting-bal").value)
     );
-    document.querySelector("#balance").textContent =
-      document.querySelector("#starting-bal").value;
     this.startGame(this.player, this.dealer);
   },
   startGame(player, dealer) {
@@ -174,11 +176,9 @@ const game = {
     dealer.dealHand(card);
   },
   twist() {
-    console.log(this.player);
     let card = game.deal();
     game.reveal("player", card);
     this.player.dealHand(card);
-    console.log(this.player.value());
     if (this.player.value() > 21) {
       this.gameOver(0, 1);
     }
@@ -209,7 +209,7 @@ const game = {
     this.begin();
   },
   begin() {
-    this.player.bet(document.querySelector("#bet-start").value);
+    this.player.bet(Number(document.querySelector("#bet-start").value));
     document.querySelector("#bet-start").value = "";
   },
 };
@@ -221,16 +221,6 @@ const game = {
 // Header start
 
 // Close menu on play
-document.querySelector("#play").addEventListener("click", (event) => {
-  event.preventDefault();
-  document.querySelector(".start-game").style.display = "none";
-  document.querySelector(".restart-game").style.display = "block";
-  document.querySelector(".start-bet").style.display = "block";
-  document.querySelector(".console").style.display = "block";
-  document.querySelector("#player-name").value = "";
-  document.querySelector("#starting-bal").value = "";
-});
-
 document.querySelector("#restart").addEventListener("click", (event) => {
   event.preventDefault();
   document.querySelector(".start-game").style.display = "block";
@@ -260,14 +250,21 @@ document.querySelector("#restart").addEventListener("click", (event) => {
 // Start game
 document.querySelector("#play").addEventListener("click", (event) => {
   event.preventDefault();
+  document.querySelector(".start-game").style.display = "none";
+  document.querySelector(".restart-game").style.display = "block";
+  document.querySelector(".start-bet").style.display = "block";
+  document.querySelector(".console").style.display = "block";
+  document.querySelector("#balance").textContent =
+    document.querySelector("#starting-bal").value;
   game.__init__();
+  document.querySelector("#player-name").value = "";
+  document.querySelector("#starting-bal").value = "";
 });
 
 // Twist
-document.querySelector("#twist").addEventListener("click", (event, player) => {
+document.querySelector("#twist").addEventListener("click", (event) => {
   event.preventDefault();
-  console.log(player);
-  game.twist(player);
+  game.twist();
 });
 
 // Stick
@@ -281,7 +278,7 @@ document.querySelector("#start").addEventListener("click", (event) => {
   event.preventDefault();
   document.querySelector("#bet").textContent = "";
   if (
-    document.querySelector("#bet-start").value >
+    Number(document.querySelector("#bet-start").value) >
       document.querySelector("#balance").textContent ||
     document.querySelector("#bet-start").value === ""
   ) {
